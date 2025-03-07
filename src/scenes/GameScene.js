@@ -3,6 +3,7 @@ import { CONSTANTS } from '../config.js';
 import Player from '../entities/Player.js';
 import Obstacles from '../entities/Obstacles.js';
 import Glitches from '../effects/Glitches.js';
+import SpeedManager from '../utils/speedManager.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -224,7 +225,8 @@ export default class GameScene extends Phaser.Scene {
       loop: true
     });
     
-    // Set up random glitch events with error handling
+    // Set up random glitch events with increased frequency
+    this.glitchInterval = CONSTANTS.INITIAL_GLITCH_INTERVAL / 2; // Cut the initial interval in half
     this.glitchEventTimer = this.time.addEvent({
       delay: this.glitchInterval,
       callback: () => {
@@ -247,6 +249,21 @@ export default class GameScene extends Phaser.Scene {
     // Add performance monitoring
     this.fpsText = this.add.text(700, 16, '', { fontSize: '16px', fill: '#fff' });
     this.lastFpsUpdate = 0;
+    
+    // Initialize the speed manager
+    this.speedManager = new SpeedManager(this);
+    
+    // Listen for speed changes
+    this.events.on('speedIncreased', (newSpeed) => {
+      // Update any game elements that depend on speed
+      this.gameSpeed = newSpeed;
+      
+      // If you have obstacle speed
+      this.obstacleSpeed = newSpeed;
+      
+      // If you have a background that scrolls
+      // this.background.setScrollSpeed(newSpeed);
+    });
   }
   
   update(time, delta) {
@@ -280,6 +297,11 @@ export default class GameScene extends Phaser.Scene {
       
       // Clean up any destroyed objects to prevent memory leaks
       this.cleanupDestroyedObjects();
+      
+      // Get the current speed whenever needed
+      const currentSpeed = this.speedManager.getCurrentSpeed();
+      
+      // Use currentSpeed for any speed-dependent calculations
     } catch (error) {
       console.error("Error in update loop:", error);
     }
@@ -632,17 +654,34 @@ export default class GameScene extends Phaser.Scene {
   }
   
   triggerRandomGlitch() {
-    if (this.isGameOver) return;
-    
-    try {
-      const newInterval = this.glitchesManager.triggerRandomGlitch(this.player);
-      
-      if (newInterval) {
-        this.glitchInterval = newInterval;
-        this.glitchEventTimer.delay = this.glitchInterval;
-      }
-    } catch (error) {
-      console.error("Error in triggerRandomGlitch:", error);
+    // Reduce the chance to skip (was 0.3, now 0.15)
+    if (Math.random() < 0.15) {
+      return;
     }
+    
+    // Create a fake power-up at the player's position to trigger a glitch
+    const fakePowerUp = this.obstaclesManager.getFakePowerUpsGroup().create(
+      this.player.sprite.x, 
+      this.player.sprite.y, 
+      'fakePowerUp'
+    );
+    fakePowerUp.visible = false;
+    
+    // Decrease the interval between glitches more aggressively
+    this.glitchInterval = Math.max(4000, this.glitchInterval - 200); // More aggressive decrease (was 100), lower minimum (was 8000)
+    this.glitchEventTimer.delay = this.glitchInterval;
+    
+    // Trigger the glitch effect
+    this.glitchesManager.triggerGlitch(this.player.sprite, fakePowerUp);
+  }
+  
+  shutdown() {
+    // ... existing code ...
+    
+    if (this.speedManager) {
+      this.speedManager.destroy();
+    }
+    
+    // ... rest of your shutdown method ...
   }
 } 

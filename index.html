@@ -3,12 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Glitch Runner - A cyberpunk-themed endless runner game with glitch mechanics">
     <title>Glitch Runner</title>
+    <link rel="stylesheet" href="src/styles/main.css">
+    <!-- Preload key assets -->
+    <link rel="preload" href="node_modules/phaser/dist/phaser.min.js" as="script">
+    <link rel="preload" href="src/main.js" as="script">
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Scripts -->
     <script src="node_modules/phaser/dist/phaser.min.js"></script>
     <script type="module" src="src/main.js"></script>
-    <link rel="stylesheet" href="src/game.css">
 </head>
 <body>
-    <div id="game-container"></div>
+    <header class="game-header">
+        <h1 class="game-title">GLITCH RUNNER</h1>
+    </header>
+    
+    <main>
+        <div id="game-container"></div>
+    </main>
+    
+    <footer class="game-footer">
+        <p>Use arrow keys or space to play. Avoid obstacles and watch out for glitches!</p>
+        <p class="copyright">&copy; 2023 Glitch Runner</p>
+    </footer>
+    
+    <!-- Loading screen -->
+    <div id="loading-screen">
+        <div class="loader"></div>
+        <p>Loading game...</p>
+    </div>
 </body>
 </html>

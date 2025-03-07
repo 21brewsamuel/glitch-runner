@@ -1,0 +1,62 @@
+#game-container {
+  width: 800px;
+  height: 600px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #222222;
+  position: relative;
+}
+
+/* Let Phaser handle the canvas completely */
+canvas {
+  display: block;
+}
+
+/* Add a subtle glow effect to the game container */
+#game-container::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  z-index: -1;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  border-radius: 7px;
+  opacity: 0.3;
+  animation: glow 3s infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+/* Adjust body to center everything properly */
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  font-family: var(--font-main);
+  color: var(--text-color);
+}
+
+/* Adjust footer position */
+.game-footer {
+  width: 100%;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 1rem;
+} 

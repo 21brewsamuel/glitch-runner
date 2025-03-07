@@ -1,0 +1,130 @@
+/* Import other stylesheets */
+@import 'reset.css';
+@import 'game.css';
+@import 'loading.css';
+@import 'utilities.css';
+
+/* Base styles */
+:root {
+  --primary-color: #00ffff;
+  --secondary-color: #ff00ff;
+  --background-color: #121212;
+  --text-color: #ffffff;
+  --accent-color: #00ff99;
+  --font-main: 'Courier New', monospace;
+}
+
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  font-family: var(--font-main);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+/* Header styles */
+.game-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.game-title {
+  font-size: 3rem;
+  font-weight: bold;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: transparent;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  background-clip: text;
+  -webkit-background-clip: text;
+  position: relative;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  animation: glitch 15s infinite alternate;
+}
+
+@keyframes glitch {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    transform: translateX(0);
+  }
+  2% {
+    text-shadow: -2px 0 rgba(255, 0, 255, 0.7), 2px 0 rgba(0, 255, 255, 0.7);
+    transform: translateX(2px);
+  }
+  4% {
+    text-shadow: 2px 0 rgba(0, 255, 255, 0.7), -2px 0 rgba(255, 0, 255, 0.7);
+    transform: translateX(-2px);
+  }
+  6%, 98% {
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    transform: translateX(0);
+  }
+}
+
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.game-footer {
+  width: 100%;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 1.5rem;
+}
+
+.copyright {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 840px) {
+  #game-container {
+    width: 95vw !important;
+    height: calc(95vw * 0.75) !important;
+  }
+  
+  .game-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-height: 650px) {
+  .game-footer {
+    display: none;
+  }
+  
+  .game-header {
+    margin-bottom: 0.5rem;
+  }
+  
+  .game-title {
+    font-size: 1.5rem;
+  }
+  
+  body {
+    padding: 0.5rem 0;
+  }
+} 
