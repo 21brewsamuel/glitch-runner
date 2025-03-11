@@ -661,31 +661,182 @@ export default class Glitches {
       // Turn the player red to indicate death
       runner.setTint(0xff0000);
       
-      // Game over text
-      const gameOverText = this.scene.add.text(400, 250, 'GAME OVER', { 
+      // Create semi-transparent overlay
+      const overlay = this.scene.add.rectangle(
+        400,
+        300,
+        800,
+        600,
+        0x000000,
+        0.7
+      );
+      
+      // Game over text with glitch effect
+      const gameOverText = this.scene.add.text(400, 180, 'GAME OVER', { 
         fontSize: '64px', 
         fill: '#ff0000',
-        fontStyle: 'bold'
+        fontStyle: 'bold',
+        stroke: '#ffffff',
+        strokeThickness: 2
       });
       gameOverText.setOrigin(0.5);
       
+      // Add glitch effect to game over text
+      this.scene.tweens.add({
+        targets: gameOverText,
+        alpha: { from: 1, to: 0.8 },
+        duration: 100,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+        onUpdate: () => {
+          if (Math.random() > 0.95) {
+            gameOverText.setX(400 + (Math.random() * 10 - 5));
+          }
+        }
+      });
+      
       const finalScore = Math.floor(this.scene.survivalTime);
-      const scoreMessage = this.scene.add.text(400, 320, `You survived for ${finalScore} seconds`, { 
-        fontSize: '32px', 
+      const scoreMessage = this.scene.add.text(400, 270, `You survived for ${finalScore} seconds`, { 
+        fontSize: '24px', 
         fill: '#ffffff'
       });
       scoreMessage.setOrigin(0.5);
       
-      const restartText = this.scene.add.text(400, 380, 'Press SPACE to restart', { 
-        fontSize: '24px', 
-        fill: '#ffffff'
-      });
-      restartText.setOrigin(0.5);
+      // Create electric glow effect for restart button
+      const glowFX = this.scene.add.graphics();
+      glowFX.fillStyle(0x00ffff, 0.2);
+      glowFX.fillCircle(400, 380, 110);
       
-      // Set up restart on space key
-      this.scene.input.keyboard.once('keydown-SPACE', () => {
-        this.scene.scene.restart();
+      // Add pulsing effect to glow
+      this.scene.tweens.add({
+        targets: glowFX,
+        alpha: { from: 0.2, to: 0.5 },
+        duration: 1500,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut'
       });
+      
+      // Add restart button
+      const restartButton = this.scene.add.rectangle(
+        400,
+        380,
+        200,
+        60,
+        0x001a1a,
+        0.9
+      ).setInteractive();
+      
+      // Add electric border with animation
+      const border = this.scene.add.rectangle(
+        400,
+        380,
+        204,
+        64,
+        0x00ffff,
+        1
+      );
+      
+      // Add second border for electric effect
+      const outerBorder = this.scene.add.rectangle(
+        400,
+        380,
+        214,
+        74,
+        0xff00ff,
+        0.7
+      );
+      
+      // Animate borders for electric effect
+      this.scene.tweens.add({
+        targets: [border, outerBorder],
+        scaleX: { from: 1, to: 1.03 },
+        scaleY: { from: 1, to: 1.03 },
+        duration: 700,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut'
+      });
+      
+      // Add button text
+      const restartText = this.scene.add.text(
+        400,
+        380,
+        'RESTART',
+        {
+          fontFamily: 'monospace',
+          fontSize: '28px',
+          color: '#00ffff',
+          stroke: '#ffffff',
+          strokeThickness: 1,
+          shadow: { offsetX: 0, offsetY: 0, color: '#00ffff', blur: 10, stroke: true, fill: true }
+        }
+      ).setOrigin(0.5);
+      
+      // Add subtle animation to text
+      this.scene.tweens.add({
+        targets: restartText,
+        scale: { from: 1, to: 1.05 },
+        duration: 1000,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut'
+      });
+      
+      // Add hover effect
+      restartButton.on('pointerover', () => {
+        restartButton.fillColor = 0x003333;
+        border.fillColor = 0x00ffff;
+        border.alpha = 1;
+      });
+      
+      restartButton.on('pointerout', () => {
+        restartButton.fillColor = 0x001a1a;
+        border.fillColor = 0x00ffff;
+        border.alpha = 0.8;
+      });
+      
+      // Add click effect
+      restartButton.on('pointerdown', () => {
+        restartButton.fillColor = 0x005555;
+        restartText.setScale(0.95);
+        border.setStrokeStyle(3, 0xffffff);
+      });
+      
+      // Restart game on button click
+      restartButton.on('pointerup', () => {
+        this.scene.cameras.main.fade(500, 0, 0, 0);
+        this.scene.time.delayedCall(500, () => {
+          this.scene.scene.restart();
+        });
+      });
+      
+      // Still allow keyboard restart for accessibility
+      this.scene.input.keyboard.once('keydown-SPACE', () => {
+        this.scene.cameras.main.fade(500, 0, 0, 0);
+        this.scene.time.delayedCall(500, () => {
+          this.scene.scene.restart();
+        });
+      });
+      
+      // Make jump button restart the game too
+      const jumpButton = document.getElementById('jumpButton');
+      if (jumpButton) {
+        const restartGameHandler = () => {
+          this.scene.cameras.main.fade(500, 0, 0, 0);
+          this.scene.time.delayedCall(500, () => {
+            this.scene.scene.restart();
+          });
+          
+          // Remove event listener after use
+          jumpButton.removeEventListener('mousedown', restartGameHandler);
+          jumpButton.removeEventListener('touchstart', restartGameHandler);
+        };
+        
+        jumpButton.addEventListener('mousedown', restartGameHandler);
+        jumpButton.addEventListener('touchstart', restartGameHandler);
+      }
     } catch (error) {
       console.error("Error in gameOver:", error);
       // Force restart if there's an error

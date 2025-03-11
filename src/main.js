@@ -1,11 +1,13 @@
 import Phaser from 'phaser';
 import { config } from './config.js';
 import GameScene from './scenes/GameScene.js';
+import StartScene from './scenes/StartScene.js';
 import { initJumpButton } from './jumpButton.js';
 
 // Register scenes
+const startScene = new StartScene();
 const gameScene = new GameScene();
-const scenes = [gameScene];
+const scenes = [startScene, gameScene];
 
 // Create the game with our configuration
 const game = new Phaser.Game({
