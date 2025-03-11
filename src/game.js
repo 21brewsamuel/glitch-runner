@@ -34,6 +34,18 @@ const config = {
   const normalJumpVelocity = -450;
   const slowedJumpVelocity = -250;
   
+  // Function to detect mobile devices more reliably
+  function isMobileDevice() {
+    return (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      (window.matchMedia && window.matchMedia('(max-width: 840px)').matches)
+    );
+  }
+
+  // Use this function to check if the device is mobile
+  const isMobile = isMobileDevice();
+  console.log("Is mobile device:", isMobile);
+  
   function preload() {
     // Create a more sophisticated stick figure runner with better animations
     let graphics = this.add.graphics();
@@ -526,6 +538,66 @@ const config = {
     this.flipWarning.setOrigin(0.5);
     this.flipWarning.setVisible(false);
     this.flipWarning.setDepth(1000); // Make sure it's on top
+    
+    // Set up the jump button for mobile devices
+    function setupMobileControls() {
+      const jumpButton = document.getElementById('jumpButton');
+      
+      if (jumpButton) {
+        // Always show the jump button on mobile
+        if (isMobile) {
+          jumpButton.style.display = 'flex';
+          
+          jumpButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            console.log("Jump button pressed");
+            if (runner && runner.body && runner.body.touching.down && !runner.getData('jumpDisabled')) {
+              const jumpVelocity = runner.getData('slowed') ? slowedJumpVelocity : normalJumpVelocity;
+              runner.setVelocityY(jumpVelocity);
+              runner.play('jump');
+              
+              if (window.runningDust && window.runningDust.active) {
+                window.runningDust.stop();
+              }
+            }
+          });
+          
+          // Prevent default touch actions to avoid scrolling
+          document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+          }, { passive: false });
+        } else {
+          // Hide the jump button on desktop
+          jumpButton.style.display = 'none';
+        }
+      }
+    }
+    
+    // Call this function after your game is initialized
+    document.addEventListener('DOMContentLoaded', function() {
+      setupMobileControls();
+    });
+    
+    // Make sure the canvas is properly sized for mobile
+    function resizeGame() {
+      if (isMobile) {
+        const canvas = document.querySelector('canvas');
+        if (canvas) {
+          canvas.style.width = '100%';
+          canvas.style.height = '100%';
+          canvas.style.maxWidth = '100vw';
+          canvas.style.maxHeight = '100vh';
+          canvas.style.position = 'absolute';
+          canvas.style.top = '0';
+          canvas.style.left = '0';
+        }
+      }
+    }
+    
+    // Call resize on load and when orientation changes
+    window.addEventListener('load', resizeGame);
+    window.addEventListener('resize', resizeGame);
+    window.addEventListener('orientationchange', resizeGame);
   }
   
   function update() {
@@ -1051,4 +1123,4 @@ const config = {
       glitchInterval = 12000;
     }, this);
   }
-  
+ 

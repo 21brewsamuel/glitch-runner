@@ -16,6 +16,9 @@ const game = new Phaser.Game({
     postBoot: function() {
       // Signal that the game has loaded
       document.dispatchEvent(new Event('game-loaded'));
+      
+      // Force a resize to ensure mobile display is correct
+      window.dispatchEvent(new Event('resize'));
     }
   }
 });

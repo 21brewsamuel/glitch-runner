@@ -1,0 +1,105 @@
+/* Mobile controls */
+#mobile-controls {
+  display: none; /* Hidden by default, shown on mobile */
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  pointer-events: none; /* Let touches pass through to the game canvas */
+}
+
+#jumpButton {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 80px;
+  height: 80px;
+  background: rgba(0, 255, 255, 0.3);
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  display: none; /* Hidden by default, shown via JS for mobile */
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 1000;
+  font-size: 24px;
+  color: white;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+#jumpButton span {
+  color: var(--text-color);
+  font-weight: bold;
+  font-size: 1rem;
+  text-shadow: 0 0 5px var(--primary-color);
+}
+
+#jumpButton:active {
+  background: rgba(0, 255, 255, 0.5);
+  transform: scale(0.95);
+}
+
+#swipe-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 120px;
+  text-align: center;
+  color: var(--text-color);
+  font-size: 0.8rem;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Show mobile controls on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  #mobile-controls {
+    display: block;
+  }
+  
+  .mobile-instructions {
+    display: block;
+  }
+  
+  /* Hide desktop instructions on mobile */
+  .game-footer p:first-child {
+    display: none;
+  }
+}
+
+/* Hide mobile instructions on desktop */
+.mobile-instructions {
+  display: none;
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 840px) {
+  .game-header,
+  .game-footer,
+  .copyright {
+    display: none;
+  }
+  
+  #game-container {
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+/* Prevent scrolling/zooming on mobile */
+body {
+  overflow: hidden;
+  touch-action: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+} 

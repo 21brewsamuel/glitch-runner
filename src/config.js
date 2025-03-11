@@ -1,9 +1,23 @@
 // Game configuration
 export const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
   backgroundColor: "#222222",
+  scale: {
+    mode: Phaser.Scale.FIT,
+    parent: 'game-container',
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: 800,
+    height: 600,
+    min: {
+      width: 375,
+      height: 667
+    },
+    max: {
+      width: 800,
+      height: 600
+    },
+    zoom: 1
+  },
   physics: {
     default: "arcade",
     arcade: {
