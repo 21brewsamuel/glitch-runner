@@ -1,0 +1,44 @@
+/* Jump button styles that override all others */
+#jumpButton {
+  position: absolute !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  width: 80px !important;
+  height: 80px !important;
+  background: rgba(0, 255, 255, 0.5) !important;
+  border: 3px solid cyan !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  z-index: 99999 !important; /* Extremely high z-index */
+  font-size: 16px !important;
+  font-weight: bold !important;
+  color: white !important;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.8) !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+#jumpButton:hover {
+  background: rgba(0, 255, 255, 0.7) !important;
+  transform: scale(1.05) !important;
+}
+
+#jumpButton:active {
+  background: rgba(0, 255, 255, 0.9) !important;
+  transform: scale(0.95) !important;
+}
+
+/* Make sure the game container can position the button properly */
+#game-container {
+  position: relative !important;
+  overflow: visible !important; /* Allow the button to be visible */
+} 

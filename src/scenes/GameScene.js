@@ -123,6 +123,13 @@ export default class GameScene extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.jumpButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
+    // Add event listener for jump button
+    this.input.on('jumpButtonPressed', () => {
+      if (this.player.sprite.body.touching.down && !this.player.sprite.getData('jumpDisabled')) {
+        this.player.jump();
+      }
+    });
+    
     // Score and leaderboard text
     this.scoreText = this.add.text(16, 16, 'Survival Time: 0', { fontSize: '24px', fill: '#fff' });
     this.leaderboardText = this.add.text(16, 50, 'High Score: 0', { fontSize: '18px', fill: '#fff' });

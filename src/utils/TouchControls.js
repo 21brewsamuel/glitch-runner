@@ -4,10 +4,12 @@
 export default class TouchControls {
   constructor(scene) {
     this.scene = scene;
-    this.jumpButton = document.getElementById('jump-button');
     this.touchStartX = 0;
     this.touchStartY = 0;
     this.swipeThreshold = 50; // Minimum distance for a swipe
+    
+    // Use the correct ID
+    this.jumpButton = document.getElementById('jumpButton');
     
     // Initialize touch controls
     this.setupTouchControls();
@@ -30,6 +32,8 @@ export default class TouchControls {
           e.preventDefault();
           this.scene.events.emit('jumpButtonPressed');
         });
+      } else {
+        console.error("Jump button not found in TouchControls");
       }
       
       // Swipe detection for lane changes

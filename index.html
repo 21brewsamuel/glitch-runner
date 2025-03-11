@@ -1,68 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Glitch Runner - A cyberpunk-themed endless runner game with glitch mechanics">
-    <title>Glitch Runner</title>
-    <link rel="stylesheet" href="src/styles/main.css">
-    <!-- Preload key assets -->
-    <link rel="preload" href="node_modules/phaser/dist/phaser.min.js" as="script">
-    <link rel="preload" href="src/main.js" as="script">
-    <!-- Favicon -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <!-- Scripts -->
-    <script src="node_modules/phaser/dist/phaser.min.js"></script>
-    <script type="module" src="src/main.js"></script>
-    <style>
-        /* Mobile-specific styles */
-        #jumpButton {
-            display: none; /* Hidden by default */
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 80px;
-            height: 80px;
-            background-color: rgba(0, 255, 255, 0.5);
-            border-radius: 50%;
-            border: 2px solid #333;
-            font-size: 16px;
-            z-index: 1000;
-            touch-action: manipulation;
-        }
-        
-        /* Make canvas responsive */
-        canvas {
-            max-width: 100%;
-            height: auto;
-        }
-        
-        /* Prevent scrolling/zooming on mobile */
-        body {
-            overflow: hidden;
-            touch-action: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Glitch Runner - A cyberpunk-themed endless runner game with glitch mechanics">
+  <title>Glitch Runner</title>
+  <link rel="stylesheet" href="src/styles/main.css">
+  <link rel="stylesheet" href="src/styles/jumpButton.css">
+  <!-- Preload key assets -->
+  <link rel="preload" href="node_modules/phaser/dist/phaser.min.js" as="script">
+  <link rel="preload" href="src/main.js" as="script">
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <!-- Scripts -->
+  <script src="node_modules/phaser/dist/phaser.min.js"></script>
+  <script type="module" src="src/main.js"></script>
 </head>
 <body>
-    <header class="game-header">
-        <h1 class="game-title">GLITCH RUNNER</h1>
-    </header>
-    
-    <main>
-        <div id="game-container"></div>
+  <header class="game-header">
+    <h1 class="game-title">GLITCH RUNNER</h1>
+  </header>
+  
+  <main>
+    <div id="game-container">
+        <canvas></canvas>
         <button id="jumpButton">JUMP</button>
-    </main>
-    
-    <footer class="game-footer">
-        <p>Use arrow keys or space to play. Avoid obstacles and watch out for glitches!</p>
-        <p class="copyright">&copy; 2023 Glitch Runner</p>
-    </footer>
-    
-    <!-- Loading screen -->
-    <div id="loading-screen">
-        <div class="loader"></div>
-        <p>Loading game...</p>
     </div>
+  </main>
+  
+  <footer class="game-footer">
+    <p>Use arrow keys or space to play. Avoid obstacles and watch out for glitches!</p>
+    <p class="copyright">&copy; 2025 Glitch Runner</p>
+  </footer>
+  
+  <!-- Loading screen -->
+  <div id="loading-screen">
+    <div class="loader"></div>
+    <p>Loading game...</p>
+  </div>
 </body>
 </html>

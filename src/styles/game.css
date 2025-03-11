@@ -1,21 +1,29 @@
 #game-container {
-  width: 100vw;
-  height: 100vh;
+  width: 800px;
+  height: 600px;
   background-color: #222222;
   position: relative;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: visible;
+  border-radius: 8px;
 }
 
-/* Let Phaser handle the canvas completely */
+/* Canvas styles - ensure it's centered and properly sized */
 canvas {
+  display: block !important;
+  margin: 0 auto !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
   width: 100% !important;
   height: 100% !important;
   object-fit: contain !important;
-  display: block;
 }
 
 /* Add a subtle glow effect to the game container */
@@ -42,24 +50,55 @@ canvas {
   }
 }
 
-/* Adjust body to center everything properly */
+/* Center everything on desktop */
 body {
   margin: 0;
   padding: 0;
   background-color: var(--background-color);
   font-family: var(--font-main);
   color: var(--text-color);
-  overflow: hidden;
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Adjust footer position */
+/* Show footer on desktop */
 .game-footer {
-  display: none;
+  display: block;
+  margin-top: 20px;
+  text-align: center;
 }
 
 .game-header {
-  display: none;
+  display: block;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 840px) {
+  #game-container {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  body {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .game-footer, .game-header {
+    display: none;
+  }
 } 

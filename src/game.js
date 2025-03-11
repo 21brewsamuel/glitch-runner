@@ -38,7 +38,8 @@ const config = {
   function isMobileDevice() {
     return (
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-      (window.matchMedia && window.matchMedia('(max-width: 840px)').matches)
+      (window.matchMedia && window.matchMedia('(max-width: 840px)').matches) ||
+      navigator.maxTouchPoints > 0
     );
   }
 
@@ -539,43 +540,69 @@ const config = {
     this.flipWarning.setVisible(false);
     this.flipWarning.setDepth(1000); // Make sure it's on top
     
-    // Set up the jump button for mobile devices
-    function setupMobileControls() {
+    // Set up the jump button for all devices
+    function setupJumpButton() {
       const jumpButton = document.getElementById('jumpButton');
       
       if (jumpButton) {
-        // Always show the jump button on mobile
-        if (isMobile) {
-          jumpButton.style.display = 'flex';
+        console.log("Setting up jump button");
+        
+        // Force display regardless of device
+        jumpButton.style.display = 'flex';
+        jumpButton.style.opacity = '1';
+        
+        // Function to trigger jump
+        const triggerJump = function(e) {
+          e.preventDefault();
+          console.log("Jump button pressed");
           
-          jumpButton.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            console.log("Jump button pressed");
-            if (runner && runner.body && runner.body.touching.down && !runner.getData('jumpDisabled')) {
-              const jumpVelocity = runner.getData('slowed') ? slowedJumpVelocity : normalJumpVelocity;
-              runner.setVelocityY(jumpVelocity);
-              runner.play('jump');
+          // Directly trigger the space key in Phaser
+          const scene = window.game.scene.scenes.find(s => s.sys.settings.active);
+          if (scene) {
+            console.log("Found active scene");
+            if (scene.jumpButton) {
+              console.log("Triggering jump button");
+              scene.jumpButton.isDown = true;
               
-              if (window.runningDust && window.runningDust.active) {
-                window.runningDust.stop();
-              }
+              // Reset after a short delay
+              setTimeout(() => {
+                if (scene && scene.jumpButton) {
+                  scene.jumpButton.isDown = false;
+                }
+              }, 100);
+            } else {
+              console.error("Jump button not found in scene");
             }
-          });
-          
-          // Prevent default touch actions to avoid scrolling
-          document.addEventListener('touchmove', function(e) {
-            e.preventDefault();
-          }, { passive: false });
-        } else {
-          // Hide the jump button on desktop
-          jumpButton.style.display = 'none';
-        }
+            
+            // Also emit the event for redundancy
+            scene.input.emit('jumpButtonPressed');
+          } else {
+            console.error("No active scene found");
+          }
+        };
+        
+        // Remove any existing event listeners
+        jumpButton.removeEventListener('touchstart', triggerJump);
+        jumpButton.removeEventListener('mousedown', triggerJump);
+        
+        // Add event listeners for both touch and mouse
+        jumpButton.addEventListener('touchstart', triggerJump);
+        jumpButton.addEventListener('mousedown', triggerJump);
+        
+        console.log("Jump button setup complete");
+      } else {
+        console.error("Jump button element not found!");
       }
     }
     
-    // Call this function after your game is initialized
-    document.addEventListener('DOMContentLoaded', function() {
-      setupMobileControls();
+    // Call this function after the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', setupJumpButton);
+    window.addEventListener('load', setupJumpButton);
+    
+    // Also call it when the game is fully loaded
+    document.addEventListener('game-loaded', function() {
+      console.log("Game loaded, setting up jump button");
+      setTimeout(setupJumpButton, 500);
     });
     
     // Make sure the canvas is properly sized for mobile
