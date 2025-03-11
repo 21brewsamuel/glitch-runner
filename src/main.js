@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { config } from './config.js';
 import GameScene from './scenes/GameScene.js';
+import { initJumpButton } from './jumpButton.js';
 
 // Register scenes
 const gameScene = new GameScene();
@@ -20,15 +21,8 @@ const game = new Phaser.Game({
       // Force a resize to ensure mobile display is correct
       window.dispatchEvent(new Event('resize'));
       
-      // Ensure jump button is visible
-      setTimeout(() => {
-        const jumpButton = document.getElementById('jumpButton');
-        if (jumpButton) {
-          jumpButton.style.display = 'flex';
-          jumpButton.style.opacity = '1';
-          console.log("Jump button style after game boot:", jumpButton.style.display);
-        }
-      }, 500);
+      // Make game globally accessible for debugging and jump button
+      window.game = game;
     }
   }
 });
@@ -43,15 +37,6 @@ document.addEventListener('game-loaded', () => {
       loadingScreen.remove();
     }, 500);
   }
-  
-  // Ensure jump button is visible after loading screen is gone
-  setTimeout(() => {
-    const jumpButton = document.getElementById('jumpButton');
-    if (jumpButton) {
-      jumpButton.style.display = 'flex';
-      jumpButton.style.opacity = '1';
-    }
-  }, 1000);
 });
 
 // Export the game instance in case we need it elsewhere
