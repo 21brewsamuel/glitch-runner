@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import { CONSTANTS } from '../config.js';
+import { gameState } from '../utils/GameState.js';
+import { uiManager } from '../utils/UIManager.js';
 import Player from '../entities/Player.js';
 import Obstacles from '../entities/Obstacles.js';
 import Glitches from '../effects/Glitches.js';
@@ -9,9 +11,7 @@ export default class GameScene extends Phaser.Scene {
   constructor() {
     super({ key: 'GameScene' });
     
-    this.survivalTime = 0;
     this.glitchInterval = CONSTANTS.INITIAL_GLITCH_INTERVAL;
-    this.gameSpeed = 200;
     this.isGameOver = false;
   }
   
@@ -22,9 +22,8 @@ export default class GameScene extends Phaser.Scene {
   
   create() {
     // Reset game state
-    this.survivalTime = 0;
+    gameState.startNewGame();
     this.glitchInterval = CONSTANTS.INITIAL_GLITCH_INTERVAL;
-    this.gameSpeed = 200;
     this.isGameOver = false;
     
     // Add background
@@ -36,7 +35,7 @@ export default class GameScene extends Phaser.Scene {
     groundSprite.setTint(0x00ff99);
     
     // Create player
-    this.player = new Player(this, 100, 450);
+    this.player = new Player(this, gameState.playerPosition.x, gameState.playerPosition.y);
     
     // Create obstacles manager
     this.obstaclesManager = new Obstacles(this);
@@ -283,24 +282,24 @@ export default class GameScene extends Phaser.Scene {
         this.lastFpsUpdate = time;
       }
       
-      // Update survival time
-      this.survivalTime += delta / 1000; // Convert ms to seconds
-      this.scoreText.setText('Survival Time: ' + Math.floor(this.survivalTime));
+      // Update survival time using game state
+      gameState.updateSurvivalTime(delta);
       
       // Calculate game speed (increases over time)
-      this.gameSpeed = 200 + Math.min(this.survivalTime * 10, 300);
+      const newSpeed = 200 + Math.min(gameState.survivalTime / 1000 * 10, 300);
+      gameState.updateGameSpeed(newSpeed);
       
       // Update player
-      this.player.update(this.cursors, this.jumpButton, this.gameSpeed);
+      this.player.update(this.cursors, this.jumpButton, gameState.gameSpeed);
       
       // Update obstacles
-      this.obstaclesManager.update(this.gameSpeed);
+      this.obstaclesManager.update(gameState.gameSpeed);
       
       // Update ground lines
-      this.updateGroundLines(this.gameSpeed);
+      this.updateGroundLines(gameState.gameSpeed);
       
       // Update parallax background elements
-      this.updateParallaxElements(this.gameSpeed);
+      this.updateParallaxElements(gameState.gameSpeed);
       
       // Clean up any destroyed objects to prevent memory leaks
       this.cleanupDestroyedObjects();
@@ -309,6 +308,10 @@ export default class GameScene extends Phaser.Scene {
       const currentSpeed = this.speedManager.getCurrentSpeed();
       
       // Use currentSpeed for any speed-dependent calculations
+      
+      // Update UI
+      uiManager.update();
+      
     } catch (error) {
       console.error("Error in update loop:", error);
     }
@@ -328,6 +331,9 @@ export default class GameScene extends Phaser.Scene {
     this.shieldPowerUpTimer.remove();
     this.jumpBoostPowerUpTimer.remove();
     this.glitchEventTimer.remove();
+    
+    // Update game state
+    gameState.gameOver();
     
     // Call the game over method from glitches manager
     this.glitchesManager.gameOver(player, obstacle);

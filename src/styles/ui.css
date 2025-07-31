@@ -1,0 +1,308 @@
+/* Game UI Styles */
+.game-ui {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  color: #00ff99;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  text-shadow: 0 0 10px #00ff99;
+}
+
+.score-display {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.score-display div {
+  font-size: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #00ff99;
+}
+
+.settings-btn {
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff99;
+  color: #00ff99;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.settings-btn:hover {
+  background: #00ff99;
+  color: #000;
+  box-shadow: 0 0 20px #00ff99;
+}
+
+/* Power-up Indicators */
+.powerup-indicators {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.powerup-indicator {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff99;
+  border-radius: 8px;
+  padding: 8px;
+  color: #00ff99;
+  font-size: 12px;
+  font-weight: bold;
+  min-width: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.powerup-indicator.active {
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+.powerup-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.powerup-timer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: #00ff99;
+  transition: width 0.1s linear;
+}
+
+/* Power-up type icons */
+.powerup-icon.speedBoost { background: #ff6b6b; }
+.powerup-icon.shield { background: #4ecdc4; }
+.powerup-icon.jumpBoost { background: #45b7d1; }
+.powerup-icon.invertedControls { background: #96ceb4; }
+.powerup-icon.slowJump { background: #feca57; }
+.powerup-icon.jumpDisabled { background: #ff9ff3; }
+.powerup-icon.screenFlip { background: #54a0ff; }
+.powerup-icon.gravityFlip { background: #5f27cd; }
+
+/* Game Over Screen */
+.game-over-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.game-over-content {
+  background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+  border: 3px solid #00ff99;
+  border-radius: 15px;
+  padding: 40px;
+  text-align: center;
+  color: #00ff99;
+  font-family: 'Courier New', monospace;
+  box-shadow: 0 0 30px #00ff99;
+  animation: slideIn 0.5s ease-out;
+}
+
+.game-over-content h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  text-shadow: 0 0 20px #00ff99;
+}
+
+.game-over-content div {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.restart-btn {
+  background: linear-gradient(45deg, #00ff99, #00cc7a);
+  border: none;
+  color: #000;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.restart-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #00ff99;
+}
+
+/* Settings Panel */
+.settings-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.settings-content {
+  background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+  border: 3px solid #00ff99;
+  border-radius: 15px;
+  padding: 30px;
+  color: #00ff99;
+  font-family: 'Courier New', monospace;
+  min-width: 300px;
+  animation: slideIn 0.5s ease-out;
+}
+
+.settings-content h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  text-shadow: 0 0 10px #00ff99;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: rgba(0, 255, 153, 0.1);
+  border-radius: 5px;
+}
+
+.setting-item label {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.setting-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #00ff99;
+}
+
+.setting-item select {
+  background: #1a1a1a;
+  color: #00ff99;
+  border: 2px solid #00ff99;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+
+.close-btn {
+  background: linear-gradient(45deg, #ff6b6b, #ff5252);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 15px #ff6b6b;
+}
+
+/* Animations */
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px #00ff99;
+  }
+  to {
+    box-shadow: 0 0 20px #00ff99, 0 0 30px #00ff99;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .game-ui {
+    top: 10px;
+    left: 10px;
+  }
+  
+  .score-display div {
+    font-size: 14px;
+    padding: 3px 8px;
+  }
+  
+  .powerup-indicators {
+    top: 10px;
+    right: 10px;
+  }
+  
+  .powerup-indicator {
+    min-width: 100px;
+    padding: 6px;
+    font-size: 10px;
+  }
+  
+  .game-over-content {
+    padding: 20px;
+    margin: 20px;
+  }
+  
+  .game-over-content h2 {
+    font-size: 28px;
+  }
+  
+  .settings-content {
+    margin: 20px;
+    padding: 20px;
+  }
+}
