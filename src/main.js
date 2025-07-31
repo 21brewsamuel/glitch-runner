@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import { config } from './config.js';
+import { gameState } from './utils/GameState.js';
+import { uiManager } from './utils/UIManager.js';
 import GameScene from './scenes/GameScene.js';
 import StartScene from './scenes/StartScene.js';
 import { initJumpButton } from './jumpButton.js';

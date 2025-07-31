@@ -7,6 +7,7 @@
   <title>Glitch Runner</title>
   <link rel="stylesheet" href="src/styles/main.css">
   <link rel="stylesheet" href="src/styles/jumpButton.css">
+  <link rel="stylesheet" href="src/styles/ui.css">
   <!-- Preload key assets -->
   <link rel="preload" href="node_modules/phaser/dist/phaser.min.js" as="script">
   <link rel="preload" href="src/main.js" as="script">
@@ -25,7 +26,60 @@
     <div id="game-container">
         <canvas></canvas>
         <button id="jumpButton">JUMP</button>
-    </div>
+        
+        <!-- Game UI -->
+        <div class="game-ui">
+          <div class="score-display">
+            <div id="score-text">Score: 0</div>
+            <div id="high-score-text">High Score: 0</div>
+            <div id="survival-text">Time: 0:00</div>
+          </div>
+          
+          <button id="settings-button" class="settings-btn">⚙️</button>
+        </div>
+        
+        <!-- Power-up indicators will be created dynamically -->
+        <div id="powerup-indicators" class="powerup-indicators"></div>
+        
+        <!-- Game Over Screen -->
+        <div id="game-over-screen" class="game-over-screen" style="display: none;">
+          <div class="game-over-content">
+            <h2>GAME OVER</h2>
+            <div id="final-score">Final Score: 0</div>
+            <div id="final-time">Survival Time: 0:00</div>
+            <button id="restart-button" class="restart-btn">Play Again</button>
+          </div>
+        </div>
+        
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="settings-panel" style="display: none;">
+          <div class="settings-content">
+            <h3>Settings</h3>
+            <div class="setting-item">
+              <label for="sound-toggle">Sound Effects</label>
+              <input type="checkbox" id="sound-toggle" checked>
+            </div>
+            <div class="setting-item">
+              <label for="music-toggle">Background Music</label>
+              <input type="checkbox" id="music-toggle" checked>
+            </div>
+            <div class="setting-item">
+              <label for="haptic-toggle">Haptic Feedback</label>
+              <input type="checkbox" id="haptic-toggle" checked>
+            </div>
+            <div class="setting-item">
+              <label for="difficulty-select">Difficulty</label>
+              <select id="difficulty-select">
+                <option value="easy">Easy</option>
+                <option value="normal" selected>Normal</option>
+                <option value="hard">Hard</option>
+                <option value="nightmare">Nightmare</option>
+              </select>
+            </div>
+            <button id="close-settings" class="close-btn">Close</button>
+          </div>
+        </div>
+      </div>
   </main>
   
   <footer class="game-footer">
