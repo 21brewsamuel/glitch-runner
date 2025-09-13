@@ -5,7 +5,6 @@ import { uiManager } from '../utils/UIManager.js';
 import Player from '../entities/Player.js';
 import Obstacles from '../entities/Obstacles.js';
 import Glitches from '../effects/Glitches.js';
-import SpeedManager from '../utils/speedManager.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -254,10 +253,7 @@ export default class GameScene extends Phaser.Scene {
     this.fpsText = this.add.text(700, 16, '', { fontSize: '16px', fill: '#fff' });
     this.lastFpsUpdate = 0;
     
-    // Initialize the speed manager
-    this.speedManager = new SpeedManager(this);
-    
-    // Listen for speed changes
+    // Listen for speed changes from game state
     this.events.on('speedIncreased', (newSpeed) => {
       // Update any game elements that depend on speed
       this.gameSpeed = newSpeed;
@@ -307,10 +303,7 @@ export default class GameScene extends Phaser.Scene {
       // Clean up any destroyed objects to prevent memory leaks
       this.cleanupDestroyedObjects();
       
-      // Get the current speed whenever needed
-      const currentSpeed = this.speedManager.getCurrentSpeed();
-      
-      // Use currentSpeed for any speed-dependent calculations
+      // Speed is managed through gameState.gameSpeed
       
       // Update UI
       uiManager.update();
@@ -692,13 +685,8 @@ export default class GameScene extends Phaser.Scene {
   }
   
   shutdown() {
-    // ... existing code ...
-    
-    if (this.speedManager) {
-      this.speedManager.destroy();
-    }
-    
-    // ... rest of your shutdown method ...
+    // Cleanup method for scene shutdown
+    // Add any necessary cleanup code here
   }
 
 } 
