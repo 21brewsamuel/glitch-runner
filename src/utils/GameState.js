@@ -161,6 +161,8 @@ export class GameState {
   
   updateSurvivalTime(deltaTime) {
     this.survivalTime += deltaTime;
+    // Update score based on survival time (score = seconds survived)
+    this.currentScore = Math.floor(this.survivalTime / 1000);
   }
   
   updateGameSpeed(newSpeed) {
@@ -276,7 +278,22 @@ export class GameState {
   
   loadHighScore() {
     try {
-      const saved = localStorage.getItem('glitchRunner_highScore');
+      // First check for the new prefixed key
+      let saved = localStorage.getItem('glitchRunner_highScore');
+      
+      // If not found, check for the old key and migrate
+      if (!saved) {
+        const oldHighScore = localStorage.getItem('highScore');
+        if (oldHighScore) {
+          const score = parseInt(oldHighScore, 10);
+          // Migrate to new key
+          localStorage.setItem('glitchRunner_highScore', score.toString());
+          // Optionally remove the old key
+          localStorage.removeItem('highScore');
+          return score;
+        }
+      }
+      
       return saved ? parseInt(saved, 10) : 0;
     } catch (error) {
       console.error('Failed to load high score:', error);

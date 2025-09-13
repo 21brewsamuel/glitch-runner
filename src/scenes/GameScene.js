@@ -129,9 +129,7 @@ export default class GameScene extends Phaser.Scene {
       }
     });
     
-    // Score and leaderboard text
-    this.scoreText = this.add.text(16, 16, 'Survival Time: 0', { fontSize: '24px', fill: '#fff' });
-    this.leaderboardText = this.add.text(16, 50, 'High Score: 0', { fontSize: '18px', fill: '#fff' });
+    // Score display is handled by UIManager
     
     // Start spawning obstacles with error handling
     this.obstacleTimer = this.time.addEvent({
@@ -269,6 +267,11 @@ export default class GameScene extends Phaser.Scene {
       
       // If you have a background that scrolls
       // this.background.setScrollSpeed(newSpeed);
+    });
+    
+    // Listen for restart events from UI
+    document.addEventListener('restart-game', () => {
+      this.scene.restart();
     });
   }
   
@@ -698,205 +701,4 @@ export default class GameScene extends Phaser.Scene {
     // ... rest of your shutdown method ...
   }
 
-  gameOver() {
-    // Stop the game
-    this.isGameOver = true;
-    this.physics.pause();
-    
-    // Store the final score
-    const finalScore = Math.floor(this.survivalTime);
-    
-    // Check if it's a new high score
-    let highScore = localStorage.getItem('highScore') || 0;
-    if (finalScore > highScore) {
-      highScore = finalScore;
-      localStorage.setItem('highScore', highScore);
-    }
-    
-    // Create semi-transparent overlay
-    const overlay = this.add.rectangle(
-      this.cameras.main.centerX,
-      this.cameras.main.centerY,
-      this.cameras.main.width,
-      this.cameras.main.height,
-      0x000000,
-      0.7
-    );
-    
-    // Add game over text with glitch effect
-    const gameOverText = this.add.text(
-      this.cameras.main.centerX,
-      this.cameras.main.height * 0.3,
-      'GAME OVER',
-      {
-        fontFamily: 'monospace',
-        fontSize: '64px',
-        color: '#ff0000',
-        stroke: '#ffffff',
-        strokeThickness: 2
-      }
-    ).setOrigin(0.5);
-    
-    // Add glitch effect to game over text
-    this.tweens.add({
-      targets: gameOverText,
-      alpha: { from: 1, to: 0.8 },
-      duration: 100,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut',
-      onUpdate: () => {
-        if (Math.random() > 0.95) {
-          gameOverText.setX(this.cameras.main.centerX + (Math.random() * 10 - 5));
-        }
-      }
-    });
-    
-    // Add score text
-    this.add.text(
-      this.cameras.main.centerX,
-      this.cameras.main.height * 0.45,
-      `You survived for ${finalScore} seconds`,
-      {
-        fontFamily: 'monospace',
-        fontSize: '24px',
-        color: '#ffffff'
-      }
-    ).setOrigin(0.5);
-    
-    // Create electric glow effect for restart button
-    const glowFX = this.add.graphics();
-    glowFX.fillStyle(0x00ffff, 0.2);
-    glowFX.fillCircle(this.cameras.main.centerX, this.cameras.main.height * 0.65, 110);
-    
-    // Add pulsing effect to glow
-    this.tweens.add({
-      targets: glowFX,
-      alpha: { from: 0.2, to: 0.5 },
-      duration: 1500,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
-    });
-    
-    // Add restart button
-    const restartButton = this.add.rectangle(
-      this.cameras.main.centerX,
-      this.cameras.main.height * 0.65,
-      200,
-      60,
-      0x001a1a,
-      0.9
-    ).setInteractive();
-    
-    // Add electric border with animation
-    const border = this.add.rectangle(
-      this.cameras.main.centerX,
-      this.cameras.main.height * 0.65,
-      204,
-      64,
-      0x00ffff,
-      1
-    );
-    
-    // Add second border for electric effect
-    const outerBorder = this.add.rectangle(
-      this.cameras.main.centerX,
-      this.cameras.main.height * 0.65,
-      214,
-      74,
-      0xff00ff,
-      0.7
-    );
-    
-    // Animate borders for electric effect
-    this.tweens.add({
-      targets: [border, outerBorder],
-      scaleX: { from: 1, to: 1.03 },
-      scaleY: { from: 1, to: 1.03 },
-      duration: 700,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
-    });
-    
-    // Add button text
-    const restartText = this.add.text(
-      this.cameras.main.centerX,
-      this.cameras.main.height * 0.65,
-      'RESTART',
-      {
-        fontFamily: 'monospace',
-        fontSize: '28px',
-        color: '#00ffff',
-        stroke: '#ffffff',
-        strokeThickness: 1,
-        shadow: { offsetX: 0, offsetY: 0, color: '#00ffff', blur: 10, stroke: true, fill: true }
-      }
-    ).setOrigin(0.5);
-    
-    // Add subtle animation to text
-    this.tweens.add({
-      targets: restartText,
-      scale: { from: 1, to: 1.05 },
-      duration: 1000,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
-    });
-    
-    // Add hover effect
-    restartButton.on('pointerover', () => {
-      restartButton.fillColor = 0x003333;
-      border.fillColor = 0x00ffff;
-      border.alpha = 1;
-    });
-    
-    restartButton.on('pointerout', () => {
-      restartButton.fillColor = 0x001a1a;
-      border.fillColor = 0x00ffff;
-      border.alpha = 0.8;
-    });
-    
-    // Add click effect
-    restartButton.on('pointerdown', () => {
-      restartButton.fillColor = 0x005555;
-      restartText.setScale(0.95);
-      border.setStrokeStyle(3, 0xffffff);
-    });
-    
-    // Restart game on button click
-    restartButton.on('pointerup', () => {
-      this.cameras.main.fade(500, 0, 0, 0);
-      this.time.delayedCall(500, () => {
-        this.scene.restart();
-      });
-    });
-    
-    // Still allow keyboard restart for accessibility
-    this.input.keyboard.once('keydown-SPACE', () => {
-      this.cameras.main.fade(500, 0, 0, 0);
-      this.time.delayedCall(500, () => {
-        this.scene.restart();
-      });
-    });
-    
-    // Make jump button restart the game too
-    const jumpButton = document.getElementById('jumpButton');
-    if (jumpButton) {
-      const restartGameHandler = () => {
-        this.cameras.main.fade(500, 0, 0, 0);
-        this.time.delayedCall(500, () => {
-          this.scene.restart();
-        });
-        
-        // Remove event listener after use
-        jumpButton.removeEventListener('mousedown', restartGameHandler);
-        jumpButton.removeEventListener('touchstart', restartGameHandler);
-      };
-      
-      jumpButton.addEventListener('mousedown', restartGameHandler);
-      jumpButton.addEventListener('touchstart', restartGameHandler);
-    }
-  }
 } 

@@ -6,6 +6,7 @@ export class UIManager {
     this.powerUpIndicators = new Map();
     this.initializeElements();
     this.setupEventListeners();
+    this.updateSettingsDisplay();
   }
   
   initializeElements() {
@@ -26,6 +27,11 @@ export class UIManager {
     // Settings elements
     this.elements.settingsButton = document.getElementById('settings-button');
     this.elements.settingsPanel = document.getElementById('settings-panel');
+    this.elements.closeSettingsButton = document.getElementById('close-settings');
+    this.elements.soundToggle = document.getElementById('sound-toggle');
+    this.elements.musicToggle = document.getElementById('music-toggle');
+    this.elements.hapticToggle = document.getElementById('haptic-toggle');
+    this.elements.difficultySelect = document.getElementById('difficulty-select');
     
     // Create power-up indicator elements if they don't exist
     this.createPowerUpIndicators();
@@ -80,6 +86,38 @@ export class UIManager {
     if (this.elements.settingsButton) {
       this.elements.settingsButton.addEventListener('click', () => {
         this.toggleSettingsPanel();
+      });
+    }
+    
+    // Settings panel close button
+    if (this.elements.closeSettingsButton) {
+      this.elements.closeSettingsButton.addEventListener('click', () => {
+        this.hideSettingsPanel();
+      });
+    }
+    
+    // Settings controls
+    if (this.elements.soundToggle) {
+      this.elements.soundToggle.addEventListener('change', (e) => {
+        gameState.updateSetting('soundEnabled', e.target.checked);
+      });
+    }
+    
+    if (this.elements.musicToggle) {
+      this.elements.musicToggle.addEventListener('change', (e) => {
+        gameState.updateSetting('musicEnabled', e.target.checked);
+      });
+    }
+    
+    if (this.elements.hapticToggle) {
+      this.elements.hapticToggle.addEventListener('change', (e) => {
+        gameState.updateSetting('hapticEnabled', e.target.checked);
+      });
+    }
+    
+    if (this.elements.difficultySelect) {
+      this.elements.difficultySelect.addEventListener('change', (e) => {
+        this.validateAndSetDifficulty(e.target.value);
       });
     }
   }
@@ -206,7 +244,98 @@ export class UIManager {
     if (this.elements.settingsPanel) {
       const isVisible = this.elements.settingsPanel.style.display === 'flex';
       this.elements.settingsPanel.style.display = isVisible ? 'none' : 'flex';
+      if (!isVisible) {
+        this.updateSettingsDisplay();
+      }
     }
+  }
+  
+  hideSettingsPanel() {
+    if (this.elements.settingsPanel) {
+      this.elements.settingsPanel.style.display = 'none';
+    }
+  }
+  
+  validateAndSetDifficulty(value) {
+    const validDifficulties = ['easy', 'normal', 'hard', 'nightmare'];
+    
+    if (!validDifficulties.includes(value)) {
+      console.warn(`Invalid difficulty: ${value}. Reverting to 'normal'.`);
+      
+      // Show user feedback
+      this.showTemporaryMessage('Invalid difficulty setting. Reset to Normal.', 'error');
+      
+      // Reset to normal
+      value = 'normal';
+      if (this.elements.difficultySelect) {
+        this.elements.difficultySelect.value = 'normal';
+      }
+    }
+    
+    // Update the game state
+    gameState.updateSetting('difficulty', value);
+    
+    // Show confirmation
+    this.showTemporaryMessage(`Difficulty set to: ${value.charAt(0).toUpperCase() + value.slice(1)}`, 'success');
+  }
+  
+  updateSettingsDisplay() {
+    const settings = gameState.settings;
+    
+    if (this.elements.soundToggle) {
+      this.elements.soundToggle.checked = settings.soundEnabled;
+    }
+    
+    if (this.elements.musicToggle) {
+      this.elements.musicToggle.checked = settings.musicEnabled;
+    }
+    
+    if (this.elements.hapticToggle) {
+      this.elements.hapticToggle.checked = settings.hapticEnabled;
+    }
+    
+    if (this.elements.difficultySelect) {
+      this.elements.difficultySelect.value = settings.difficulty;
+    }
+  }
+  
+  showTemporaryMessage(text, type = 'info') {
+    const message = document.createElement('div');
+    message.className = `temp-message temp-message-${type}`;
+    message.textContent = text;
+    
+    const colors = {
+      success: '#00ff99',
+      error: '#ff6b6b',
+      info: '#54a0ff'
+    };
+    
+    message.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      color: ${colors[type] || colors.info};
+      border: 2px solid ${colors[type] || colors.info};
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      z-index: 1001;
+      animation: slideInRight 0.3s ease-out;
+      box-shadow: 0 0 20px ${colors[type] || colors.info};
+    `;
+    
+    document.body.appendChild(message);
+    
+    setTimeout(() => {
+      message.style.animation = 'slideOutRight 0.3s ease-in';
+      setTimeout(() => {
+        if (message.parentNode) {
+          message.remove();
+        }
+      }, 300);
+    }, 3000);
   }
   
   updatePowerUpIndicators() {
