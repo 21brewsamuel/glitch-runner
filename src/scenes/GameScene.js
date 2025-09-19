@@ -228,8 +228,8 @@ export default class GameScene extends Phaser.Scene {
       loop: true
     });
     
-    // Set up random glitch events with increased frequency
-    this.glitchInterval = CONSTANTS.INITIAL_GLITCH_INTERVAL / 2; // Cut the initial interval in half
+    // Set up random glitch events - optimized for fast gameplay
+    this.glitchInterval = CONSTANTS.INITIAL_GLITCH_INTERVAL; // Use normal interval for less disruption
     this.glitchEventTimer = this.time.addEvent({
       delay: this.glitchInterval,
       callback: () => {
@@ -336,12 +336,16 @@ export default class GameScene extends Phaser.Scene {
   }
   
   cleanupDestroyedObjects() {
-    // Manually clean up destroyed objects to prevent memory leaks
-    this.children.each(child => {
-      if (child.active === false) {
-        this.children.remove(child);
+    // Less frequent cleanup for better performance
+    if (this.time.now % 2000 < 16) { // Approximately every 2 seconds
+      // Manually clean up destroyed objects to prevent memory leaks
+      const children = this.children.list;
+      for (let i = children.length - 1; i >= 0; i--) {
+        if (children[i].active === false) {
+          this.children.remove(children[i]);
+        }
       }
-    });
+    }
   }
   
   createTextures() {
@@ -663,8 +667,8 @@ export default class GameScene extends Phaser.Scene {
   }
   
   triggerRandomGlitch() {
-    // Reduce the chance to skip (was 0.3, now 0.15)
-    if (Math.random() < 0.15) {
+    // Increase chance to skip for faster gameplay (40% chance to skip)
+    if (Math.random() < 0.4) {
       return;
     }
     
@@ -676,8 +680,8 @@ export default class GameScene extends Phaser.Scene {
     );
     fakePowerUp.visible = false;
     
-    // Decrease the interval between glitches more aggressively
-    this.glitchInterval = Math.max(4000, this.glitchInterval - 200); // More aggressive decrease (was 100), lower minimum (was 8000)
+    // Decrease the interval more gradually for balanced gameplay
+    this.glitchInterval = Math.max(6000, this.glitchInterval - 150); // Less aggressive decrease, higher minimum
     this.glitchEventTimer.delay = this.glitchInterval;
     
     // Trigger the glitch effect
